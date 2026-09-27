@@ -48,6 +48,8 @@ modeling.connect(subProcess, task, sequenceFlow);
 
 modeling.connect(subProcess, task, sequenceFlow, { foo: 'bar' });
 
+modeling.reverse(sequenceFlow);
+
 modeling.updateModdleProperties(task, { type: 'bpmn:ExtensionElements' }, {
   values: []
 });
@@ -100,6 +102,7 @@ modeling.setColor([ task ], { stroke: 'green' });
  */
 
 expectType<Connection>(modeling.createConnection(subProcess, task, sequenceFlow, bpmnProcess));
+expectType<Connection | undefined>(modeling.reverse(sequenceFlow));
 
 expectType<Label>(modeling.createLabel(task, { x: 100, y: 100 }, {
   businessObject: getBusinessObject(task)
@@ -127,13 +130,20 @@ type CustomElement = {
   foo: string;
 } & Element;
 
+type CustomConnection = {
+  baz: string;
+} & Connection;
+
 type CustomShape = {
   bar: string;
 } & Shape & CustomElement;
 
-class CustomModeling extends Modeling<Connection, CustomElement, Label, Parent, CustomShape> {};
+class CustomModeling extends Modeling<CustomConnection, CustomElement, Label, Parent, CustomShape> {};
 
 const customModeling = modeler.get<CustomModeling>('modeling');
+const customConnection = {} as CustomConnection;
+
+expectType<CustomConnection | undefined>(customModeling.reverse(customConnection));
 
 const customShape = customModeling.createShape({ bar: 'bar' }, { x: 100, y: 100 }, modeler.get<CustomElementFactory>('elementFactory').create('root'));
 

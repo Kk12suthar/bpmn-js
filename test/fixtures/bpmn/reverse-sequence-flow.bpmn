@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:task id="Task_Source" default="SequenceFlow_Reverse">
+      <bpmn:outgoing>SequenceFlow_Reverse</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Default</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Target" default="SequenceFlow_OtherDefault">
+      <bpmn:incoming>SequenceFlow_Reverse</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_Default</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_OtherDefault</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Other">
+      <bpmn:incoming>SequenceFlow_OtherDefault</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_Reverse" name="Condition" sourceRef="Task_Source" targetRef="Task_Target">
+      <bpmn:documentation>Keep this documentation</bpmn:documentation>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${foo}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_Default" sourceRef="Task_Source" targetRef="Task_Target" />
+    <bpmn:sequenceFlow id="SequenceFlow_OtherDefault" sourceRef="Task_Target" targetRef="Task_Other" />
+    <bpmn:task id="Task_Loop" default="SequenceFlow_Loop">
+      <bpmn:incoming>SequenceFlow_Loop</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Loop</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_Loop" sourceRef="Task_Loop" targetRef="Task_Loop" />
+    <bpmn:startEvent id="StartEvent_Invalid">
+      <bpmn:outgoing>SequenceFlow_Invalid</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Invalid">
+      <bpmn:incoming>SequenceFlow_Invalid</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_End</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_Invalid" sourceRef="StartEvent_Invalid" targetRef="Task_Invalid" />
+    <bpmn:endEvent id="EndEvent_Invalid">
+      <bpmn:incoming>SequenceFlow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_End" sourceRef="Task_Invalid" targetRef="EndEvent_Invalid" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Task_Source_di" bpmnElement="Task_Source">
+        <dc:Bounds x="160" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Target_di" bpmnElement="Task_Target">
+        <dc:Bounds x="440" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Other_di" bpmnElement="Task_Other">
+        <dc:Bounds x="680" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_Reverse_di" bpmnElement="SequenceFlow_Reverse" sourceElement="Task_Source_di" targetElement="Task_Target_di">
+        <di:waypoint x="210" y="180" />
+        <di:waypoint x="210" y="240" />
+        <di:waypoint x="490" y="240" />
+        <di:waypoint x="490" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="320" y="245" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_Default_di" bpmnElement="SequenceFlow_Default" sourceElement="Task_Source_di" targetElement="Task_Target_di">
+        <di:waypoint x="260" y="140" />
+        <di:waypoint x="440" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_OtherDefault_di" bpmnElement="SequenceFlow_OtherDefault">
+        <di:waypoint x="540" y="140" />
+        <di:waypoint x="680" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Loop_di" bpmnElement="Task_Loop">
+        <dc:Bounds x="680" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_Loop_di" bpmnElement="SequenceFlow_Loop">
+        <di:waypoint x="730" y="320" />
+        <di:waypoint x="730" y="280" />
+        <di:waypoint x="820" y="280" />
+        <di:waypoint x="820" y="360" />
+        <di:waypoint x="780" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_Invalid_di" bpmnElement="StartEvent_Invalid">
+        <dc:Bounds x="160" y="320" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Invalid_di" bpmnElement="Task_Invalid">
+        <dc:Bounds x="340" y="298" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_Invalid_di" bpmnElement="SequenceFlow_Invalid">
+        <di:waypoint x="196" y="338" />
+        <di:waypoint x="340" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_Invalid_di" bpmnElement="EndEvent_Invalid">
+        <dc:Bounds x="560" y="320" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_End_di" bpmnElement="SequenceFlow_End">
+        <di:waypoint x="440" y="338" />
+        <di:waypoint x="560" y="338" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

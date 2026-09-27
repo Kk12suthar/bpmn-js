@@ -385,6 +385,7 @@ describe('features - context-pad', function() {
         'append.text-annotation',
         'delete',
         'replace',
+        'reverse-flow',
         '!connect'
       ]);
     }));
@@ -396,8 +397,94 @@ describe('features - context-pad', function() {
         'append.text-annotation',
         'delete',
         '!replace',
+        '!reverse-flow',
         '!connect'
       ]);
+    }));
+
+  });
+
+
+  describe('reverse sequence flow', function() {
+
+    var diagramXML = require('../../../fixtures/bpmn/reverse-sequence-flow.bpmn');
+
+    beforeEach(bootstrapModeler(diagramXML, {
+      modules: testModules
+    }));
+
+
+    it('should provide reverse action for a reversible sequence flow', inject(function(contextPad, elementRegistry) {
+
+      // given
+      var connection = elementRegistry.get('SequenceFlow_Reverse');
+
+      // when
+      contextPad.open(connection, true);
+
+      // then
+      expect(contextPad._current.entries).to.have.property('reverse-flow');
+    }));
+
+
+    it('should NOT provide reverse action for an irreversible sequence flow', inject(function(contextPad, elementRegistry) {
+
+      // given
+      var connection = elementRegistry.get('SequenceFlow_Invalid');
+
+      // when
+      contextPad.open(connection, true);
+
+      // then
+      expect(contextPad._current.entries).not.to.have.property('reverse-flow');
+    }));
+
+
+    it('should render a reverse icon', inject(function(contextPad, elementRegistry) {
+
+      // given
+      var connection = elementRegistry.get('SequenceFlow_Reverse');
+
+      // when
+      contextPad.open(connection, true);
+
+      // then
+      expect(domQuery('[data-action="reverse-flow"] svg', contextPad._current.html)).to.exist;
+    }));
+
+
+    it('should respect custom reconnect rules', inject(function(contextPad, elementRegistry, customRules) {
+
+      // given
+      var connection = elementRegistry.get('SequenceFlow_Reverse');
+
+      customRules.addRule('connection.reconnect', 1500, function() {
+        return false;
+      });
+
+      // when
+      contextPad.open(connection, true);
+
+      // then
+      expect(contextPad._current.entries).not.to.have.property('reverse-flow');
+    }));
+
+
+    it('should reverse a sequence flow', inject(function(contextPad, elementRegistry) {
+
+      // given
+      var connection = elementRegistry.get('SequenceFlow_Reverse'),
+          source = elementRegistry.get('Task_Source'),
+          target = elementRegistry.get('Task_Target');
+
+      contextPad.open(connection);
+
+      // when
+      contextPad.trigger('click', padEvent('reverse-flow'));
+
+      // then
+      expect(connection.source).to.equal(target);
+      expect(connection.target).to.equal(source);
     }));
 
   });
